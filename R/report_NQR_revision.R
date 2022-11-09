@@ -14,7 +14,8 @@
 #'                     output_dir="D:/")
 #'
 report_NQR_revision <- function(dat,country_sel,output_dir){
-check_packages()
+regacc::check_packages()
+  options(dplyr.summarise.inform = FALSE)
     rev_df_long<- data.table::fread(dat) %>%
   filter(time_period >= 2015) %>%
   filter(vintage >= 2017 & vintage<= 2022) %>%
@@ -322,6 +323,7 @@ writeDataTable(wb, sheet="6_Mean_shares", mean_weights_wide, startCol = 1, start
 writeDataTable(wb, sheet="7_Weighted_rev",weighted_rev_wide, startCol = 1, startRow = 1,tableStyle = "TableStyleLight13")
 
 saveWorkbook(wb, paste0(output_dir,"/",country_sel,"_NQR_revision.xlsx"), overwrite = TRUE)
+options(warn = 0)
 }
 
 
