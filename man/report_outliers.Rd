@@ -2,24 +2,28 @@
 % Please edit documentation in R/report_outliers.R
 \name{report_outliers}
 \alias{report_outliers}
-\title{Identify outliers based on the Z-score of annual change}
+\title{Identify outliers based on the Z-score based on several units (levels, diff(t-(t-1)) or  pc (t/(t-1))}
 \usage{
-report_outliers(data, z = 3, sto_sel, time_min)
+report_outliers(data, unit = "level", z = 3, sto_sel, time_min, abs_ths = 10)
 }
 \arguments{
 \item{data}{a data frame with the original data.}
+
+\item{unit}{level, diff (t-(t-1)) or  pc (t/(t-1))}
 
 \item{z}{the factor to use, normally 2.5 or 3.}
 
 \item{sto_sel}{possibly filter some transactions.}
 
 \item{time_min}{possibly filter unrevised data.}
+
+\item{abs_ths}{minimum threshold to do the test, 10 by default}
 }
 \value{
 a data frame with the identified outliers
 }
 \description{
-Identify outliers based on the Z-score of annual change
+Identify outliers based on the Z-score based on several units (levels, diff(t-(t-1)) or  pc (t/(t-1))
 }
 \examples{
 df <- load_csv(
@@ -28,5 +32,4 @@ country_sel = "AT",
 time_min = "2021-12-01")
 
 report_outliers(df)
-
 }
