@@ -41,4 +41,4 @@ mem_use <- function(sort="size", decreasing=TRUE, limit=10) {
   print(memListing, row.names=FALSE)
   return(invisible(memListing))
 }
-mem_use()
+

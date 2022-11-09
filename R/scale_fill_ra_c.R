@@ -1,4 +1,4 @@
-#' fill palette for charts
+#' fill palette for charts with continuous variables
 #'
 #' @param name name of the palette. "full" by default. Other options ("primary","monoblue","monofuchsia")
 #'

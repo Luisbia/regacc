@@ -2,7 +2,7 @@
 % Please edit documentation in R/scale_fill_ra_c.R
 \name{scale_fill_ra_c}
 \alias{scale_fill_ra_c}
-\title{fill palette for charts}
+\title{fill palette for charts with continuous variables}
 \usage{
 scale_fill_ra_c(name = "monoblue")
 }
@@ -13,7 +13,7 @@ scale_fill_ra_c(name = "monoblue")
 a continuous fill palette
 }
 \description{
-fill palette for charts
+fill palette for charts with continuous variables
 }
 \examples{
 a fill palette
