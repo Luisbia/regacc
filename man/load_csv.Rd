@@ -18,7 +18,7 @@ load_csv(
 \arguments{
 \item{folder}{specifies the folder where the files are. By default is the server folder.}
 
-\item{country_sel}{Country or countries to look for.}
+\item{country_sel}{Country or countries to look for, by default all}
 
 \item{table_sel}{table or tables to look for.}
 

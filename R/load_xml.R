@@ -9,7 +9,7 @@
 #' consistent with the one used by default elsewhere.
 #'
 #' @param folder specifies the folder where the files are. By default is the server folder.
-#' @param country_sel Country or countries to look for ("ES", c("ES","PT").
+#' @param country_sel Country or countries to look for ("ES", c("ES","PT").All by default
 #' @param table_sel table or tables to look for ("T1001", c("T1001","T1002"))
 #' @param sto_sel NA item to look for ("B1G", c("B1G","EMP"))
 #' @param unit_sel Unit to look for ("XDC", c("XDC","PC"))
@@ -61,7 +61,6 @@ load_xml <- function(folder = "//fame2prod.cc.cec.eu.int/fame-estat/econ/REGACC/
   if(missing(unit_sel)) {
     unit_sel<- c("XDC","PC","PS","HW")}
 
-  luispack::check_packages()
 
   df<-list.files(path= folder,
                  pattern = glob2rx("*xml$"),
@@ -89,10 +88,13 @@ load_xml <- function(folder = "//fame2prod.cc.cec.eu.int/fame-estat/econ/REGACC/
 
   if(consolidate == TRUE){
      df <- df %>%
-      arrange(date) %>%
-      group_by(across(c(table_identifier,ref_area,sto,accounting_entry,activity,unit_measure,time_period,obs_status,conf_status))) %>%
-      slice_tail(n=1)%>%
-	  ungroup()
+	  select(date,table_identifier,country,ref_area,sto,accounting_entry,activity,unit_measure,time_period,obs_value)%>%
+      arrange(date,.by_group=TRUE) %>%
+      group_by(across(-c(date))) %>%
+      slice_head(n=1)%>%
+	  ungroup()%>% 
+    arrange(date) 
+
 
      return (df)
   } else {

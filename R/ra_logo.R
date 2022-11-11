@@ -29,10 +29,10 @@ ra_logo<- function (chart,colour = "blue", left=0.87, bottom=0.0,right=1,top=0.1
   library(patchwork)
 
   if(colour=="white"){
-    logo<-  png::readPNG(system.file("logo","eurostat_new_white.PNG",package ="luispack"),native=TRUE)
+    logo<-  png::readPNG(system.file("logo","eurostat_new_white.PNG",package ="regacc"),native=TRUE)
   }
   if(colour=="blue"){
-  logo<-  png::readPNG(system.file("logo","eurostat_new.PNG",package ="luispack"),native=TRUE)
+  logo<-  png::readPNG(system.file("logo","eurostat_new.PNG",package ="regacc"),native=TRUE)
                   }
 
   chart_logo<- chart+

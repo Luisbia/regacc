@@ -4,7 +4,7 @@
 #'The location of the files in the server is:
 #' @param folder Path to the location of the files
 #' @param table_sel table(s) to load (nama_10r_2gdp, nama_10r_3gdp, nama_10r_3popgdp, nama_10r_3gva, nama_10r_3empers, nama_10r_2coe, nama_10r_2gfcf, nama_10r_2emhrw, nama_10r_2hhinc, nama_10r_2gvavr).
-#' @param country_sel Filter for a particular country/ies.
+#' @param country_sel Filter for a particular country/ies. All by default
 #' @return a data frame/data.table object.
 #' @export load_MDT
 #'

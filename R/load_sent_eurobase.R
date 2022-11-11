@@ -3,7 +3,7 @@
 #' This function looks at the folder where the files sent to Eurobase are stored, loads them and puts them together in a data frame.
 #' @param folder specifies the folder where the files are (zip files)
 #' @param table_sel the Eurobase table to look for. It only accepts a single argument (nama_10r_2gdp, nama_10r_3gdp, nama_10r_3popgdp, nama_10r_3gva, nama_10r_3empers, nama_10r_2coe, nama_10r_2gfcf, nama_10r_2emhrw, nama_10r_2hhinc, nama_10r_2gvavr)
-#' @param country_sel country or countries to look for
+#' @param country_sel country or countries to look for, by default all
 #' @param time_min date of publication from where to start looking (yyyy-mm-dd)
 #' @param time_max date of publication from where to stop looking (yyyy-mm-dd)
 #' @param consolidate TRUE to remove duplicated values, FALSE (default) to keep them all
@@ -175,9 +175,11 @@ load_sent_eurobase<- function(folder,table_sel, country_sel,time_min= "2019-01-0
     df_list <- df_list %>%
       select(-value) %>%
       arrange(date) %>%
-      group_by(across(-c(values,date))) %>%
-      slice_tail(n=1) %>%
-      ungroup}
+      group_by(across(-c(date))) %>%
+      slice_head(n=1) %>%
+      ungroup%>% 
+    arrange(date)
+	}
 
   return(df_list)
   options(warn = 0)

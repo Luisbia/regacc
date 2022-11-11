@@ -18,7 +18,7 @@ load_xml(
 \arguments{
 \item{folder}{specifies the folder where the files are. By default is the server folder.}
 
-\item{country_sel}{Country or countries to look for ("ES", c("ES","PT").}
+\item{country_sel}{Country or countries to look for ("ES", c("ES","PT").All by default}
 
 \item{table_sel}{table or tables to look for ("T1001", c("T1001","T1002"))}
 
