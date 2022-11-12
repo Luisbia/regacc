@@ -55,7 +55,8 @@ regacc::check_packages()
                        expand = c(exm,exa))+
     scale_y_continuous(labels = scales::label_number(accuracy = acc),
                        breaks = scales::breaks_extended(n=vbr))+
-    theme(panel.grid.major.x = element_blank())
+    theme(panel.grid.major.x = element_blank(),
+          axis.ticks.x = element_line())
 
 
   if (leg == FALSE) {

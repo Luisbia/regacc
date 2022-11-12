@@ -1,4 +1,4 @@
-#' Title
+#' NQR revision file
 #'Function to create the NRQ revision report that we sent to countries
 #'Needs to be updated every year to change some parameters
 #' @param dat external csv file with the data
