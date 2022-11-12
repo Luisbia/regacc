@@ -2,7 +2,7 @@
 % Please edit documentation in R/report_NQR_revision.R
 \name{report_NQR_revision}
 \alias{report_NQR_revision}
-\title{Title
+\title{NQR revision file
 Function to create the NRQ revision report that we sent to countries
 Needs to be updated every year to change some parameters}
 \usage{
@@ -19,7 +19,7 @@ report_NQR_revision(dat, country_sel, output_dir)
 an excel report
 }
 \description{
-Title
+NQR revision file
 Function to create the NRQ revision report that we sent to countries
 Needs to be updated every year to change some parameters
 }

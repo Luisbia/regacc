@@ -31,7 +31,8 @@ check_packages<- function(){
                       "patchwork",
                       "png",
                       "rlang",
-                      "ggtext")
+                      "ggtext",
+                      "odbc")
   # Function to Install and Load R Packages
   Install_And_Load <- function(Required_Packages)
   {
