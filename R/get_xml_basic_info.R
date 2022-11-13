@@ -13,8 +13,9 @@
 #' 
 get_xml_basic_info<- function(...){
   regacc::check_packages()
+  
   data<-regacc::load_xml(...) %>% 
-    as.data.table
+    as.data.table()
   
   temp<- unique(data[!obs_status %in% c("L","M") & !is.na(obs_value) ,.(first = min(time_period), last = max(time_period)),by =.(table_identifier,country,sto,accounting_entry,unit_measure)])%>% 
     .[,lapply(.SD, as.factor),] %>% # convert to factors for better filtering

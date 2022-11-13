@@ -8,7 +8,7 @@
 #' @caption a caption text for the table
 #'
 #' @return DT table
-#' @export
+#' @export show_DT
 #'
 #' @examples
 #'
