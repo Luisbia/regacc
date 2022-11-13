@@ -50,7 +50,7 @@ theme_ra <- function(font= "MS Sans Serif") {
     # and sets the requirements for any text within the legend.
     # The legend may often need some more manual tweaking
     # when it comes to its exact position based on the plot coordinates.
-    legend.position = "right",
+    legend.position = "top",
     legend.text.align = 0,
     legend.background = ggplot2::element_blank(),
     legend.title = ggplot2::element_blank(),

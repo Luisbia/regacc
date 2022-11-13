@@ -13,9 +13,20 @@
 #'
 #' show_DT(dataregacc::NUTS_2021)
 #'
-show_DT <- function(x){
-
-  DT::datatable(x, filter = "top", class = "stripe hover", extensions = "Buttons",
-                options = list(  lengthMenu = list(c(20, -1), c("20", "All")),
-                                 pageLength = 20, dom = "Blfrtip", buttons = c("excel"))
-  )}
+show_DT <- function(x) {
+  
+  
+  DT::datatable(
+    x,
+    caption = paste0(caption),
+    filter = "top",
+    class = "stripe hover",
+    extensions = "Buttons",
+    options = list(
+      lengthMenu = list(c(20, -1), c("20", "All")),
+      pageLength = 20,
+      dom = "Blfrtip",
+      buttons = c("excel")
+    )
+  )
+   }
