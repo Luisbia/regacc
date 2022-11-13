@@ -8,6 +8,8 @@ show_DT(x, caption = "")
 }
 \arguments{
 \item{x}{a data frame}
+
+\item{caption}{a caption text for the table}
 }
 \value{
 DT table
