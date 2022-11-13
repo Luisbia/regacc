@@ -4,7 +4,7 @@
 \alias{show_DT}
 \title{Create an HTML interactive table with DT}
 \usage{
-show_DT(x)
+show_DT(x, caption = "")
 }
 \arguments{
 \item{x}{a data frame}
