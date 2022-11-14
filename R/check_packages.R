@@ -32,7 +32,8 @@ check_packages<- function(){
                       "png",
                       "rlang",
                       "ggtext",
-                      "odbc")
+                      "odbc",
+                      "arrow")
   # Function to Install and Load R Packages
   Install_And_Load <- function(Required_Packages)
   {

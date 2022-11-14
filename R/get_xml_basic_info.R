@@ -3,7 +3,7 @@
 #'This functions provides summary information (reporting periods, regions, flags and comments) from xml files. The output are dynamic HTML tables
 #' @param ... same parameters as for load_xml
 #'
-#' @return four intervactive html tables
+#' @return four interactive html tables
 #' @export get_xml_basic_info
 #'
 #' @examples
@@ -12,22 +12,31 @@
 #' time_min = "2021-10-01")
 #' 
 get_xml_basic_info<- function(...){
+  
   regacc::check_packages()
   
-  data<-regacc::load_xml(...) %>% 
-    as.data.table()
+  data<-regacc::load_xml(...) 
   
-  temp<- unique(data[!obs_status %in% c("L","M") & !is.na(obs_value) ,.(first = min(time_period), last = max(time_period)),by =.(table_identifier,country,sto,accounting_entry,unit_measure)])%>% 
-    .[,lapply(.SD, as.factor),] %>% # convert to factors for better filtering
-    droplevels()
+  temp<- data %>% 
+    filter(!obs_status %in% c("L","M") & !is.na(obs_value) ) %>% 
+    select(country,table_identifier,country,sto,accounting_entry,unit_measure, time_period) %>% 
+    group_by(across(-c(time_period))) %>% 
+    mutate(first=min(time_period),
+           last = max(time_period)) %>% 
+    select(-time_period) %>% 
+    unique() %>% 
+    mutate(across(everything(as.factor)))
 
   
   temp1<-show_DT(temp, caption ="Reported periods")
   
   
   if ("embargo_date" %in% colnames(data)){
-    temp<- na.omit(unique(files[,.(table_identifier,country,embargo_date)])) %>% 
-      .[,lapply(.SD, as.factor),] %>% 
+    temp<- data %>% 
+      select(country,table_identifier,country,embargo_date) %>% 
+      na.omit() %>% 
+      unique() %>% 
+      mutate(across(everything(as.factor))) %>% 
       droplevels()
 
     temp2<-show_DT(temp, caption ="Embargo dates")
@@ -36,22 +45,35 @@ get_xml_basic_info<- function(...){
   }
 
   if ("comment_ts" %in% names(df)) {
-    temp<-na.omit(unique(data[comment_ts!="xxx" & comment_ts!="",.(country,table_identifier,comment_ts)])) %>%   
-      .[,lapply(.SD, as.factor),] %>% 
+    temp<- data %>% 
+      select(country,table_identifier,comment_ts) %>% 
+      filter(comment_ts!="xxx" & comment_ts!="") %>% 
+      na.omit() %>% 
+      unique() %>% 
+      mutate(across(everything(as.factor))) %>% 
       droplevels()
+    
     temp3<-show_DT(temp, caption ="Comments")
   } else {
     temp2<- "No comments"
   }
-    
-  temp<-na.omit(unique(data[conf_status=="N",.(country,table_identifier,sto,activity,unit_measure,conf_status)]))%>% 
-    .[,lapply(.SD, as.factor),] %>% 
-    droplevels()
+  temp<- data %>% 
+    select(country,table_identifier,sto,activity,unit_measure,conf_status) %>% 
+    filter(conf_status =="N") %>% 
+    na.omit() %>% 
+    unique() %>% 
+    mutate(across(everything(as.factor))) %>% 
+    droplevels() 
+  
   temp3<-show_DT(temp, caption ="Data not publishable")
   
-  temp<-na.omit(unique(data[obs_status %in% c("E","P","B","D","U"),.(country,table_identifier,sto,unit_measure,obs_status,time_period)])) %>% 
-    .[,lapply(.SD, as.factor),] %>% 
-    droplevels()  
+  temp<- data %>% 
+    select(country,table_identifier,sto,unit_measure,obs_status,time_period) %>% 
+    filter(obs_status %in% c("E","P","B","D","U")) %>% 
+    na.omit() %>% 
+    unique() %>% 
+    mutate(across(everything(as.factor))) %>% 
+    droplevels()
   
   temp4<-show_DT(temp, caption ="Flags")
   

@@ -4,10 +4,10 @@
 \alias{get_denodo}
 \title{Get a cleaned denodo extraction}
 \usage{
-get_denodo(full = FALSE)
+get_denodo(T1001_1200 = FALSE)
 }
 \arguments{
-\item{full}{FALSE (default) just extracts primare series. TRUE all series}
+\item{T1001_1200}{FALSE (default) extracts primary series from tables T1001, T1002, T1200 and T1300. TRUE extracts all series from T1001 and T1001_1200.}
 }
 \value{
 a dataframe

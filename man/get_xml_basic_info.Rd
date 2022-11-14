@@ -10,7 +10,7 @@ get_xml_basic_info(...)
 \item{...}{same parameters as for load_xml}
 }
 \value{
-four intervactive html tables
+four interactive html tables
 }
 \description{
 This functions provides summary information (reporting periods, regions, flags and comments) from xml files. The output are dynamic HTML tables

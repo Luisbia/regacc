@@ -1,7 +1,7 @@
 #' Get a cleaned denodo extraction
 #'
 #'The function connects to denodo and extracts either primary series (by default) or the complete A tables.
-#' @param full FALSE (default) just extracts primare series. TRUE all series
+#' @param T1001_1200 FALSE (default) extracts primary series from tables T1001, T1002, T1200 and T1300. TRUE extracts all series from T1001 and T1001_1200.
 #'
 #' @return a dataframe
 #' @export get_denodo
@@ -9,7 +9,7 @@
 #' @examples
 #' partial<- get_denodo()
 #' full<- get_denodo(full=TRUE)
-get_denodo<- function(full=FALSE){
+get_denodo<- function(T1001_1200=FALSE){
   library(odbc) # This library is not normally installed and will need to be installed
   library(tidyverse)
   library(data.table)
@@ -19,7 +19,7 @@ get_denodo<- function(full=FALSE){
   vdp_con <- dbConnect(odbc(), "DenodoODBC")
   
   #### REGACC
-  if (full==FALSE){
+  if (T1001_1200==FALSE){
   # Creating the queries. This should take 2 minutes
   sql_regacc_t1001 <- "  SELECT * FROM hv_fame_regacc4regacc_t1001 "
   sql_regacc_t1002 <- "  SELECT * FROM hv_fame_regacc4regacc_t1002 "
@@ -34,16 +34,18 @@ get_denodo<- function(full=FALSE){
   df_regacc<- bind_rows(df_regacc_t1001,df_regacc_t1002, df_regacc_t1200,df_regacc_t1300)
   }
   
-  if (full==TRUE){
-    sql_regacc <- "  SELECT * FROM hv_fame_regacc4regacc_all_dbs "
-    df_regacc<- dbGetQuery(vdp_con, sql_regacc)
+  if (T1001_1200==TRUE){
+    sql_regacc_1001 <- "  SELECT * FROM hv_fame_regacc4regacc_t1001 "
+    sql_regacc_1001_1200 <- "  SELECT * FROM hv_fame_regacc4regacc_t1001_1200 "
+    df_regacc_1001<- dbGetQuery(vdp_con, sql_regacc_1001)
+    df_regacc_1001_1200<- dbGetQuery(vdp_con, sql_regacc_1001_1200)
     # we disconnect from denodo
   }
   
   dbDisconnect(vdp_con)
 
     #Clean
-  df_regacc<- df_regacc %>% 
+  df_regacc <- df_regacc %>% 
     select(name,date,value) %>% 
     na.omit() %>% 
     cSplit("name", sep = ".") %>% 
@@ -64,7 +66,7 @@ get_denodo<- function(full=FALSE){
     ) %>% 
     rename(time_period=date,
            obs_value=value)%>% 
-    filter(table_identifier!="TNAMA") %>% 
+    filter(table_identifier!="TNAMA" & unit_measure %in% c("PS","XDC","PC") & transformation %in% c("N","G1")) %>% 
     mutate(time_period=as.integer(time_period),
            obs_value=as.numeric(obs_value),
            NUTS=as.factor(str_length(ref_area)-2),
