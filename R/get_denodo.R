@@ -1,7 +1,7 @@
 #' Get a cleaned denodo extraction
 #'
 #'The function connects to denodo and extracts either primary series (by default) or the complete A tables.
-#' @param T1001_1200 FALSE (default) extracts primary series from tables T1001, T1002, T1200 and T1300. TRUE extracts all series from T1001 and T1001_1200.
+#' @param onlyV FALSE (default) extracts primary T and V series from tables T1001, T1002, T1200 and T1300. This is used for creating country csv files for the analysis. TRUE extracts V series for several units. The file is used for other purposes
 #'
 #' @return a dataframe
 #' @export get_denodo
@@ -9,7 +9,7 @@
 #' @examples
 #' partial<- get_denodo()
 #' full<- get_denodo(full=TRUE)
-get_denodo<- function(T1001_1200=FALSE){
+get_denodo<- function(onlyV=FALSE){
   library(odbc) # This library is not normally installed and will need to be installed
   library(tidyverse)
   library(data.table)
@@ -19,7 +19,7 @@ get_denodo<- function(T1001_1200=FALSE){
   vdp_con <- dbConnect(odbc(), "DenodoODBC")
   
   #### REGACC
-  if (T1001_1200==FALSE){
+  if (full==onlyV){
   # Creating the queries. This should take 2 minutes
   sql_regacc_t1001 <- "  SELECT * FROM hv_fame_regacc4regacc_t1001 "
   sql_regacc_t1002 <- "  SELECT * FROM hv_fame_regacc4regacc_t1002 "
@@ -32,19 +32,7 @@ get_denodo<- function(T1001_1200=FALSE){
   
   # Bind the extractions
   df_regacc<- bind_rows(df_regacc_t1001,df_regacc_t1002, df_regacc_t1200,df_regacc_t1300)
-  }
   
-  if (T1001_1200==TRUE){
-    sql_regacc_1001 <- "  SELECT * FROM hv_fame_regacc4regacc_t1001 "
-    sql_regacc_1001_1200 <- "  SELECT * FROM hv_fame_regacc4regacc_t1001_1200 "
-    df_regacc_1001<- dbGetQuery(vdp_con, sql_regacc_1001)
-    df_regacc_1001_1200<- dbGetQuery(vdp_con, sql_regacc_1001_1200)
-    # we disconnect from denodo
-  }
-  
-  dbDisconnect(vdp_con)
-
-    #Clean
   df_regacc <- df_regacc %>% 
     select(name,date,value) %>% 
     na.omit() %>% 
@@ -120,6 +108,46 @@ get_denodo<- function(T1001_1200=FALSE){
   df_regacc<- bind_rows(T_series,V_series) %>% 
     select(type,table_identifier,country,ref_area,NUTS,accounting_entry,sto,activity,unit_measure,time_period,obs_value)
   
+  
+  }
+  
+  if (onlyV==TRUE){
+    sql_regacc <- "  SELECT * FROM hv_fame_regacc4regacc_all_dbs "
+    df_regacc<- dbGetQuery(vdp_con, sql_regacc)
+
+    df_regacc <- df_regacc %>% 
+      select(name,date,value) %>% 
+      na.omit() %>% 
+      cSplit("name", sep = ".") %>% 
+      rename("type"=name_01,
+             "table_identifier"=name_02,
+             "freq"=name_03,
+             "ref_area"=name_04,
+             "counterpart_area"=name_05,
+             "ref_sector"=name_06,
+             "counterpart_sector"=name_07,
+             "accounting_entry"=name_08,
+             "sto"=name_09,
+             "activity"=name_10,
+             "valuation"=name_11,
+             "prices"=name_12,
+             "transformation"=name_13,
+             "unit_measure"=name_14
+      ) %>%
+      filter(type=="V") %>% 
+      select(-type) %>% 
+      rename(time_period=date,
+             obs_value=value)%>% 
+      mutate(time_period=as.integer(time_period),
+             obs_value=as.numeric(obs_value),
+             NUTS=as.factor(str_length(ref_area)-2),
+             country= as.character(str_sub(ref_area,1,2))) 
+       }
+  
+  dbDisconnect(vdp_con)
+
+    #Clean
+ 
   return(df_regacc)
   }
  

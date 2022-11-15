@@ -9,8 +9,7 @@ update_NQR_data(country_sel, input_dir, output_dir)
 \arguments{
 \item{country_sel}{country to update}
 
-\item{input_dir}{folder where the country denodo extraction is stored, data
-should have been validated (V)}
+\item{input_dir}{folder where the denodo extraction of validated data is stored}
 
 \item{output_dir}{output folder for the file}
 }

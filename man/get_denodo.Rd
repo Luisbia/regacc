@@ -4,10 +4,10 @@
 \alias{get_denodo}
 \title{Get a cleaned denodo extraction}
 \usage{
-get_denodo(T1001_1200 = FALSE)
+get_denodo(onlyV = FALSE)
 }
 \arguments{
-\item{T1001_1200}{FALSE (default) extracts primary series from tables T1001, T1002, T1200 and T1300. TRUE extracts all series from T1001 and T1001_1200.}
+\item{onlyV}{FALSE (default) extracts primary T and V series from tables T1001, T1002, T1200 and T1300. This is used for creating country csv files for the analysis. TRUE extracts V series for several units. The file is used for other purposes}
 }
 \value{
 a dataframe
