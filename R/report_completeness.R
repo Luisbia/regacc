@@ -87,7 +87,7 @@ report_completeness<- function(df, table_sel, verbose=FALSE){
 
   if (verbose==TRUE){
   show_missing_t1001 <- notrep_1001 %>%
-    select(table_identifier,country,ref_area,NUTS,accounting_entry,sto,activity,unit_measure,time_period,obs_value,obs_status) %>%
+    select(table_identifier,country,ref_area,NUTS,accounting_entry,sto,activity,unit_measure,time_period,obs_value) %>%
     show_DT()
   return(show_missing_t1001)}
   }
@@ -136,7 +136,7 @@ report_completeness<- function(df, table_sel, verbose=FALSE){
       return(p)}
     if (verbose==TRUE){
     show_missing_t1002 <- notrep_1002 %>%
-      select(table_identifier,country,ref_area,NUTS,accounting_entry,sto,activity,unit_measure,time_period,obs_value,obs_status) %>%
+      select(table_identifier,country,ref_area,NUTS,accounting_entry,sto,activity,unit_measure,time_period,obs_value) %>%
     show_DT()
     return(show_missing_t1002)}
   }
@@ -211,7 +211,7 @@ report_completeness<- function(df, table_sel, verbose=FALSE){
       return(p)}
     if (verbose==TRUE){
     show_missing_t1200 <- notrep_1200 %>%
-      select(table_identifier,country,ref_area,NUTS,accounting_entry,sto,activity,unit_measure,time_period,obs_value,obs_status) %>%
+      select(table_identifier,country,ref_area,NUTS,accounting_entry,sto,activity,unit_measure,time_period,obs_value) %>%
     show_DT()
       return(show_missing_t1200)}
   }
@@ -262,7 +262,7 @@ report_completeness<- function(df, table_sel, verbose=FALSE){
       return(p)}
     if (verbose==TRUE){
     show_missing_t1300 <- notrep_1300 %>%
-      select(table_identifier,country,ref_area,NUTS,accounting_entry,sto,activity,unit_measure,time_period,obs_value,obs_status) %>%
+      select(table_identifier,country,ref_area,NUTS,accounting_entry,sto,activity,unit_measure,time_period,obs_value) %>%
     show_DT()
     return(show_missing_t1300)}
   }
