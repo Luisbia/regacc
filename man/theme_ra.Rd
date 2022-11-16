@@ -4,10 +4,12 @@
 \alias{theme_ra}
 \title{Default theme options for regacc charts}
 \usage{
-theme_ra(font = "MS Sans Serif")
+theme_ra(font = "MS Sans Serif", fontsize = 12)
 }
 \arguments{
 \item{font}{Font to be used by default MS Sans Sheriff}
+
+\item{fontsize}{12 by default}
 }
 \value{
 a set of theme paremeters
