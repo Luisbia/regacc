@@ -28,16 +28,16 @@
 #' df <- load_xml(table_sel = "T1001")
 #'
 #' # Load all tables T1001 and T1300 for Slovenia and Luxembourg that have been loaded in Matis.
-#' df <- load_xml(folder = "//fame2prod.cc.cec.eu.int/fame-estat/econ/REGACC/DONE",
+#' df <- load_xml(folder = "//fame4prod.cc.cec.eu.int/fame-estat/econ/REGACC/DONE",
 #' table_sel = c("T1001","T1300"),
 #' country_sel = c("SI", "LU"))
 #'
 #' # Load all files loaded in Matis between 2021-12-22 2022-01-02 and consolidate them.
-#' df <- load_xml(folder = "//fame2prod.cc.cec.eu.int/fame-estat/econ/REGACC/DONE",
+#' df <- load_xml(folder = "//fame4prod.cc.cec.eu.int/fame-estat/econ/REGACC/DONE",
 #' time_min = "2021-12-22",
 #' time_max = "2022-01-02"
 #' consolidate = TRUE)
-load_xml <- function(folder = "//fame2prod.cc.cec.eu.int/fame-estat/econ/REGACC/INPUT",
+load_xml <- function(folder = "//fame4prod.cc.cec.eu.int/fame-estat/econ/REGACC/INPUT",
                             country_sel,
                             table_sel,
                             sto_sel,

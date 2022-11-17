@@ -23,7 +23,7 @@
 #' @return a data frame
 #'
 #' @examples
-#' # Load all the files in the folder "//fame2prod.cc.cec.eu.int/fame-estat/econ/REGACC/INSPACE"
+#' # Load all the files in the folder "//fame4prod.cc.cec.eu.int/fame-estat/econ/REGACC/INSPACE"
 #' df<- load_csv()
 #'
 #' # Load only table T1001.
@@ -38,7 +38,7 @@
 #'                       time_max = "2022-01-02",
 #'                       consolidate = TRUE)
 #'
-load_csv <- function(folder = "//fame2prod.cc.cec.eu.int/fame-estat/econ/REGACC/INSPACE",
+load_csv <- function(folder = "//fame4prod.cc.cec.eu.int/fame-estat/econ/REGACC/INSPACE",
                             country_sel,
                             table_sel,
                             sto_sel,

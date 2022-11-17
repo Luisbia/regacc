@@ -5,7 +5,7 @@
 \title{Load csv files}
 \usage{
 load_csv(
-  folder = "//fame2prod.cc.cec.eu.int/fame-estat/econ/REGACC/INSPACE",
+  folder = "//fame4prod.cc.cec.eu.int/fame-estat/econ/REGACC/INSPACE",
   country_sel,
   table_sel,
   sto_sel,
@@ -44,7 +44,7 @@ I selected the most useful ones for numerical analysis. For qualitative info (fl
 is recommended to use the related function regacc_load_xml.
 }
 \examples{
-# Load all the files in the folder "//fame2prod.cc.cec.eu.int/fame-estat/econ/REGACC/INSPACE"
+# Load all the files in the folder "//fame4prod.cc.cec.eu.int/fame-estat/econ/REGACC/INSPACE"
 df<- load_csv()
 
 # Load only table T1001.

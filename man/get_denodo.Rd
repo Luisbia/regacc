@@ -4,10 +4,10 @@
 \alias{get_denodo}
 \title{Get a cleaned denodo extraction}
 \usage{
-get_denodo(onlyV = FALSE)
+get_denodo(extraction)
 }
 \arguments{
-\item{onlyV}{FALSE (default) extracts primary T and V series from tables T1001, T1002, T1200 and T1300. This is used for creating country csv files for the analysis. TRUE extracts V series for several units. The file is used for other purposes}
+\item{extraction}{view to select from Denodo (hv_fame_regacc4regacc_all_dbs,"hv_fame_regacc4regacc_all_dbs","hv_fame_regacc4regacc_t1001","hv_fame_regacc4regacc_t1002","hv_fame_regacc4regacc_t1200", "hv_fame_regacc4regacc_t1300","hv_fame_regacc4regacc_t1001_1200", "hv_fame_regacc4regacc_tnama" )}
 }
 \value{
 a dataframe
@@ -16,6 +16,6 @@ a dataframe
 The function connects to denodo and extracts either primary series (by default) or the complete A tables.
 }
 \examples{
-partial<- get_denodo()
-full<- get_denodo(full=TRUE)
+tnama<-get_denodo_new(extraction = "hv_fame_regacc4regacc_tnama")
+
 }
