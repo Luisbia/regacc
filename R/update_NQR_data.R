@@ -5,7 +5,7 @@
 #' with the results in the chosen folder
 #'
 #' @param country_sel country to update
-#' @param input_dir folder where the denodo extraction of validated data is stored
+#' @param input_file parquet file with an extraction of primary data
 #' @param output_dir output folder for the file
 #'
 #' @return a csv file
@@ -13,56 +13,75 @@
 #'
 #' @examples
 #' update_NQR_data(country_sel = "DK",
-#' input_dir = "D:/check_input/data/denodo",
+#' input_file = "D:/check_input/data/denodo/all_primary.parquet",
 #' output_dir= "D:/")
-update_NQR_data<- function(country_sel, input_dir, output_dir){
+update_NQR_data<- function(country_sel, input_file="data/denodo/all_primary.parquet", output_dir="NQR/data"){
+regacc::check_packages()
 
-  prev<-dataregacc::NQR %>%
-    filter(country == country_sel) %>%
-    select(-label)
+data<- read_parquet(input_file)
 
-  new<-list.files(path= input_dir,
-                   pattern= "_denodo_full.parquet$",
-                   full.names=TRUE) %>% 
-    as_tibble() %>% 
-    mutate(date=map(value,file.mtime)) %>% 
-    unnest(date) %>% 
-    arrange(desc(date)) %>% 
-    head(1) %>% 
-    select(value) %>% 
-    pull() %>% 
-    arrow::read_parquet() %>% 
-    filter(country==country_sel & !is.na(obs_value) & time_period<=2012 ) %>% 
-  filter(  activity %in% c("_T", "_Z") &
-           sto %in% c("B1G", "EMP", "D1","B6N") &
-           unit_measure %in% c("XDC", "PS") &
-           NUTS %in% c("0","2")) |>
-  mutate(vintage= 2022,
-         NUTS = as.factor(NUTS))  %>%
-  select(table_identifier,country, NUTS, ref_area, sto, vintage, time_period, obs_value)
+t1001<- data %>% 
+  filter(country == country_sel &
+           table_identifier=="T1001" & 
+           time_period==2021 & 
+           activity=="_T" & 
+           sto %in% c("B1G", "EMP") &
+           prices!="Y"  &
+           unit_measure %in% c("PS","XDC") &
+           NUTS %in% c(0,2))
 
-t1001<- new |>
-  filter(table_identifier =="T1001" & time_period == 2021)
-
-t1002<- new |>
-  filter(table_identifier =="T1002" & time_period < 2021)
-
-t1200<- new |>
-  filter(table_identifier =="T1200" & time_period < 2021)
-
-t1300<- new |>
-  filter(table_identifier =="T1300" & time_period < 2021 & sto =="B6N")
-
-new<- bind_rows(t1001, t1002, t1200, t1300) |>
-  select(-table_identifier) %>%
-  mutate(NUTS=as.factor(NUTS))
+t1200 <- data %>%
+  filter(
+    country == country_sel &
+      type == "V" &
+      table_identifier == "T1200" &
+      time_period < 2021 & time_period >= 2012 &
+      activity == "_T" &
+      sto %in% c("B1G", "EMP") &
+      unit_measure %in% c("PS", "XDC") &
+      prices != "Y"  &
+      NUTS %in% c(0, 2)
+  )
 
 
-rev_df_long <- bind_rows(prev,new)  %>%
-  left_join(.,luispack::NUTS_2021)
+t1002 <- data %>%
+  filter(
+    country == country_sel &
+      type == "V" &
+      table_identifier == "T1002" &
+      time_period >= 2012 & time_period <= 2020 &
+      activity == "_T" &
+      sto %in% c("D1") &
+      unit_measure %in% c("XDC") &
+      NUTS %in% c(0, 2)
+  )
 
-data.table::fwrite(rev_df_long,paste0(output_dir,"/",country_sel,"_new.csv"))
-cat(paste0("file created at: ",output_dir,"/",country_sel,"_new.csv"))
+
+t1300<- data %>% 
+  filter(country == country_sel &
+           type =="V" &
+           table_identifier=="T1300" & 
+           time_period>= 2012 & time_period<= 2020 &
+           sto %in% c("B6N") &
+           unit_measure %in% c("XDC") &
+           NUTS %in% c(0,2))
+
+new<- bind_rows(t1001,t1002,t1200,t1300) %>% 
+  mutate(vintage = 2022) %>% 
+  select(country,NUTS,ref_area,sto,vintage,time_period,obs_value)
+
+
+prev<-dataregacc::NQR %>% 
+  filter(country==country_sel) %>% 
+  select(-label)
+
+
+data<- bind_rows(prev,new) %>% 
+  right_join(dataregacc::NUTS_2021,.)
+
+data.table::fwrite(data,paste0(output_dir,"/",country_sel,".csv"))
+
+cli::cli_alert_success(paste0("file created at: ",output_dir,"/",country_sel,".csv"))
 }
 
 
