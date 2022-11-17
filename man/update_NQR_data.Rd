@@ -4,12 +4,16 @@
 \alias{update_NQR_data}
 \title{Update NQR data set with 2022 transmissions}
 \usage{
-update_NQR_data(country_sel, input_dir, output_dir)
+update_NQR_data(
+  country_sel,
+  input_file = "data/denodo/all_primary.parquet",
+  output_dir = "NQR/data"
+)
 }
 \arguments{
 \item{country_sel}{country to update}
 
-\item{input_dir}{folder where the denodo extraction of validated data is stored}
+\item{input_file}{parquet file with an extraction of primary data}
 
 \item{output_dir}{output folder for the file}
 }
@@ -23,6 +27,6 @@ with the results in the chosen folder
 }
 \examples{
 update_NQR_data(country_sel = "DK",
-input_dir = "D:/check_input/data/denodo",
+input_file = "D:/check_input/data/denodo/all_primary.parquet",
 output_dir= "D:/")
 }
