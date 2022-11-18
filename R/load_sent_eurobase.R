@@ -22,7 +22,7 @@
 
 
 load_sent_eurobase<- function(folder,table_sel, country_sel,time_min= "2019-01-01",time_max="2023-07-11", consolidate = FALSE){
-  luispack::check_packages()
+ regacc::check_packages()
   
   tables <- c("nama_10r_2gdp", "nama_10r_3gdp", "nama_10r_3popgdp", "nama_10r_3gva", "nama_10r_3empers", "nama_10r_2coe", "nama_10r_2gfcf", "nama_10r_2emhrw", "nama_10r_2hhinc", "nama_10r_2gvagr", "nama_10r_2lp10", "nama_10r_2nlp", "nama_10r_3nlp")
   
@@ -210,6 +210,4 @@ load_sent_eurobase<- function(folder,table_sel, country_sel,time_min= "2019-01-0
   return(df_list)
   
 }
-df<- load_sent_eurobase(folder = "I:/REGACC/ref/sent",
-                        table_sel="nama_10r_2nlp",
-                        time_min = "2022-04-17")
+

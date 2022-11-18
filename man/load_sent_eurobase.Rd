@@ -16,9 +16,9 @@ load_sent_eurobase(
 \arguments{
 \item{folder}{specifies the folder where the files are (zip files)}
 
-\item{table_sel}{the Eurobase table to look for. It only accepts a single argument (nama_10r_2gdp, nama_10r_3gdp, nama_10r_3popgdp, nama_10r_3gva, nama_10r_3empers, nama_10r_2coe, nama_10r_2gfcf, nama_10r_2emhrw, nama_10r_2hhinc, nama_10r_2gvavr)}
+\item{table_sel}{the Eurobase table to look for. It only accepts a single argument (nama_10r_2gdp, nama_10r_3gdp, nama_10r_3popgdp, nama_10r_3gva, nama_10r_3empers, nama_10r_2coe, nama_10r_2gfcf, nama_10r_2emhrw, nama_10r_2hhinc, nama_10r_2gvavr,nama_10r_2lp10, nama_10r_2nlp, nama_10r_3nlp)}
 
-\item{country_sel}{country or countries to look for, by default all}
+\item{country_sel}{country or countries to look for}
 
 \item{time_min}{date of publication from where to start looking (yyyy-mm-dd)}
 
