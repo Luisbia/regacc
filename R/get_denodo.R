@@ -1,7 +1,7 @@
 #' Get a cleaned denodo extraction
 #'
 #'The function connects to denodo and extracts either primary series (by default) or the complete A tables.
-#' @param extraction view to select from Denodo (hv_fame_regacc4regacc_all_dbs,"hv_fame_regacc4regacc_all_dbs","hv_fame_regacc4regacc_t1001","hv_fame_regacc4regacc_t1002","hv_fame_regacc4regacc_t1200", "hv_fame_regacc4regacc_t1300","hv_fame_regacc4regacc_t1001_1200", "hv_fame_regacc4regacc_tnama" )
+#' @param extraction view to select from Denodo ("hv_fame_regacc4regacc_all_dbs","hv_fame_regacc4regacc_t1001","hv_fame_regacc4regacc_t1002","hv_fame_regacc4regacc_t1200", "hv_fame_regacc4regacc_t1300","hv_fame_regacc4regacc_t1001_1200", "hv_fame_regacc4regacc_tnama" )
 #'
 #' @return a dataframe
 #' @export get_denodo

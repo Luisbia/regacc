@@ -31,5 +31,6 @@ bring_files<- function (file_sel = "xml",
   file.copy(files,folder_out,
             overwrite = FALSE,
             copy.date = TRUE)
+  cli::cli_alert_success(paste0(length(files)," files copied to ",folder_out))
   }
 

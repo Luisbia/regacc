@@ -192,22 +192,21 @@ load_sent_eurobase<- function(folder,table_sel, country_sel,time_min= "2019-01-0
       df_list<-df_list %>%
         mutate(data= map(value,import_file_nlp)) %>%
         unnest(cols=c(data))
-    } else{
-      print("no such table")
-    }
-    
+
   }else {
-    print("Wrong table: tables should be one of these: nama_10r_2gdp, nama_10r_3gdp, nama_10r_3popgdp, nama_10r_3gva, nama_10r_3empers, nama_10r_2coe, nama_10r_2gfcf, nama_10r_2emhrw, nama_10r_2hhinc, nama_10r_2gvavr,nama_10r_2lp10, nama_10r_2nlp, nama_10r_3nlp" )
+    cli::cli_alert_danger("Wrong table: tables should be one of these: nama_10r_2gdp, nama_10r_3gdp, nama_10r_3popgdp, nama_10r_3gva, nama_10r_3empers, nama_10r_2coe, nama_10r_2gfcf, nama_10r_2emhrw, nama_10r_2hhinc, nama_10r_2gvavr,nama_10r_2lp10, nama_10r_2nlp, nama_10r_3nlp" )
+
   }
   if(consolidate == TRUE){
     df_list <- df_list %>%
       select(-value) %>%
-      arrange(date) %>%
-      group_by(across(-c(values,date))) %>%
-      slice_tail(n=1) %>%
-      ungroup}
+      arrange(date,.by_group=TRUE) %>%
+      group_by(across(-c(date))) %>%
+      slice_head(n=1)%>%
+      ungroup()%>% 
+      arrange(date) 
+    }
   
   return(df_list)
-  
+  }
 }
-

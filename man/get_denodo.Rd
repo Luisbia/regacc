@@ -7,7 +7,7 @@
 get_denodo(extraction)
 }
 \arguments{
-\item{extraction}{view to select from Denodo (hv_fame_regacc4regacc_all_dbs,"hv_fame_regacc4regacc_all_dbs","hv_fame_regacc4regacc_t1001","hv_fame_regacc4regacc_t1002","hv_fame_regacc4regacc_t1200", "hv_fame_regacc4regacc_t1300","hv_fame_regacc4regacc_t1001_1200", "hv_fame_regacc4regacc_tnama" )}
+\item{extraction}{view to select from Denodo ("hv_fame_regacc4regacc_all_dbs","hv_fame_regacc4regacc_t1001","hv_fame_regacc4regacc_t1002","hv_fame_regacc4regacc_t1200", "hv_fame_regacc4regacc_t1300","hv_fame_regacc4regacc_t1001_1200", "hv_fame_regacc4regacc_tnama" )}
 }
 \value{
 a dataframe
