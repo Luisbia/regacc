@@ -33,7 +33,7 @@ load_sent_eurobase<- function(folder,table_sel, country_sel,time_min= "2019-01-0
                       "HU","IE","IT","LT","LU","LV","MT","NL","PL","PT","RO","SE","SI",
                       "SK","NO", "ME", "MK","TR","AL","RS","UK","CH","EU")}
     
-    # import gdp, pop
+    # import gdp
     import_file_gdp <- function(file) {
       vroom(file,
             delim = " ",
@@ -46,7 +46,27 @@ load_sent_eurobase<- function(folder,table_sel, country_sel,time_min= "2019-01-0
         filter(country %in% country_sel) %>%
         separate(values,c("values","flag"), sep="~") %>%
         mutate(NUTS = stringr::str_length(geo)-2,
-               values = as.numeric(values))
+               values = as.numeric(values),
+			   accounting_entry = "B",
+			   activity = "_Z")
+      
+    }
+    # import pop
+    import_file_pop <- function(file) {
+      vroom(file,
+            delim = " ",
+            col_names = c("time", "geo", "unit", "values"),
+            col_types ="cccc",
+            skip = 4
+      ) %>%
+        mutate(time = as.integer(stringr::str_sub(time, 1, 4)),
+               country = substr(geo, start = 1, stop = 2)) %>%
+        filter(country %in% country_sel) %>%
+        separate(values,c("values","flag"), sep="~") %>%
+        mutate(NUTS = stringr::str_length(geo)-2,
+               values = as.numeric(values),
+               accounting_entry = "_Z",
+               activity = "_Z")
       
     }
     #import gva
@@ -62,7 +82,40 @@ load_sent_eurobase<- function(folder,table_sel, country_sel,time_min= "2019-01-0
         filter(country %in% country_sel) %>%
         separate(values,c("values","flag"), sep="~") %>%
         mutate(NUTS = stringr::str_length(geo)-2,
-               values = as.numeric(values))
+               values = as.numeric(values),
+			   accounting_entry = "B")
+    }
+    #import hw
+    import_file_hw <- function(file) {
+      vroom(file,
+            delim = " ",
+            col_names = c("time", "geo", "nace_r2", "na_item", "unit", "values"),
+            col_types = "cccccc",
+            skip = 4
+      ) %>%
+        mutate(time = as.integer(stringr::str_sub(time, 1, 4)),
+               country = substr(geo, start = 1, stop = 2)) %>%
+        filter(country %in% country_sel) %>%
+        separate(values,c("values","flag"), sep="~") %>%
+        mutate(NUTS = stringr::str_length(geo)-2,
+               values = as.numeric(values),
+               accounting_entry = "_Z")
+    }
+    
+    import_file_d1p51g <- function(file) {
+      vroom(file,
+            delim = " ",
+            col_names = c("time", "geo", "nace_r2", "unit", "values"),
+            col_types = "ccccc",
+            skip = 4
+      ) %>%
+        mutate(time = as.integer(stringr::str_sub(time, 1, 4)),
+               country = substr(geo, start = 1, stop = 2)) %>%
+        filter(country %in% country_sel) %>%
+        separate(values,c("values","flag"), sep="~") %>%
+        mutate(NUTS = stringr::str_length(geo)-2,
+               values = as.numeric(values),
+               accounting_entry = "D")
     }
     
     # import file for emp
@@ -78,7 +131,8 @@ load_sent_eurobase<- function(folder,table_sel, country_sel,time_min= "2019-01-0
         filter(country %in% country_sel) %>%
         separate(values,c("values","flag"), sep="~") %>%
         mutate(NUTS = stringr::str_length(geo)-2,
-               values = as.numeric(values))
+               values = as.numeric(values),
+			   accounting_entry = "_Z",)
     }
     
     # import file for hh
@@ -94,7 +148,8 @@ load_sent_eurobase<- function(folder,table_sel, country_sel,time_min= "2019-01-0
         filter(country %in% country_sel) %>%
         separate(values,c("values","flag"), sep="~") %>%
         mutate(NUTS = stringr::str_length(geo)-2,
-               values = as.numeric(values))
+               values = as.numeric(values),
+               activity ="_Z")
     }
     
     # gvagr
@@ -110,7 +165,9 @@ load_sent_eurobase<- function(folder,table_sel, country_sel,time_min= "2019-01-0
         filter(country %in% country_sel) %>%
         separate(values,c("values","flag"), sep="~") %>%
         mutate(NUTS = stringr::str_length(geo)-2,
-               values = as.numeric(values))
+               values = as.numeric(values),
+			   accounting_entry = "_Z",
+			   activity = "_T")
     }
     
     # nlp
@@ -150,7 +207,7 @@ load_sent_eurobase<- function(folder,table_sel, country_sel,time_min= "2019-01-0
         unnest(cols=c(data))
     } else if (table_sel == "nama_10r_3popgdp") {
       df_list<-df_list %>%
-        mutate(data= map(value,import_file_gdp)) %>%
+        mutate(data= map(value,import_file_pop)) %>%
         unnest(cols=c(data))
     } else if (table_sel == "nama_10r_3gva") {
       df_list<-df_list %>%
@@ -162,15 +219,15 @@ load_sent_eurobase<- function(folder,table_sel, country_sel,time_min= "2019-01-0
         unnest(cols=c(data))
     } else if (table_sel == "nama_10r_2coe") {
       df_list<-df_list %>%
-        mutate(data= map(value,import_file_gva)) %>%
+        mutate(data= map(value,import_file_d1p51g)) %>%
         unnest(cols=c(data))
     } else if (table_sel == "nama_10r_2gfcf") {
       df_list<-df_list %>%
-        mutate(data= map(value,import_file_gva)) %>%
+        mutate(data= map(value,import_file_d1p51g)) %>%
         unnest(cols=c(data))
     } else if (table_sel == "nama_10r_2emhrw") {
       df_list<-df_list %>%
-        mutate(data= map(value,import_file_emp)) %>%
+        mutate(data= map(value,import_file_hw)) %>%
         unnest(cols=c(data))
     } else if (table_sel == "nama_10r_2hhinc") {
       df_list<-df_list %>%
