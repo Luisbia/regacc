@@ -43,9 +43,9 @@
   }
   if("accounting_entry" %in% names(df)){
     df<- df %>%
-      mutate(accounting_entry=case_when(accounting_entry == "BAL" ~ "B",
-                                        accounting_entry == "RECV" ~ "C",
-                                        accounting_entry == "PAID" ~ "D"))
+      mutate(accounting_entry=str_replace_all(accounting_entry,"BAL","B"),
+             accounting_entry=str_replace_all(accounting_entry,"RECV","C"),
+             accounting_entry=str_replace_all(accounting_entry,"PAID","D"))
   }
   if("activity" %in% names(df)){
     df<- df %>%

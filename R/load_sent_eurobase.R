@@ -6,7 +6,7 @@
 #' @param country_sel country or countries to look for
 #' @param time_min date of publication from where to start looking (yyyy-mm-dd)
 #' @param time_max date of publication from where to stop looking (yyyy-mm-dd)
-#' @param consolidate TRUE to remove duplicated values, FALSE (default) to keep them all
+#' @param consolidate TRUE to remove duplicated obs_value, FALSE (default) to keep them all
 #' @export load_sent_eurobase
 #'
 #' @return a data frame
@@ -34,156 +34,214 @@ load_sent_eurobase<- function(folder,table_sel, country_sel,time_min= "2019-01-0
                       "SK","NO", "ME", "MK","TR","AL","RS","UK","CH","EU")}
     
     # import gdp
-    import_file_gdp <- function(file) {
+    import_file_gdp2 <- function(file) {
       vroom(file,
             delim = " ",
-            col_names = c("time", "geo", "unit", "values"),
+            col_names = c("time_period", "ref_area", "unit_measure", "obs_value"),
             col_types ="cccc",
             skip = 4
       ) %>%
-        mutate(time = as.integer(stringr::str_sub(time, 1, 4)),
-               country = substr(geo, start = 1, stop = 2)) %>%
+        mutate(time_period = as.integer(stringr::str_sub(time_period, 1, 4)),
+               country = substr(ref_area, start = 1, stop = 2)) %>%
         filter(country %in% country_sel) %>%
-        separate(values,c("values","flag"), sep="~") %>%
-        mutate(NUTS = stringr::str_length(geo)-2,
-               values = as.numeric(values),
+        separate(obs_value,c("obs_value","obs_status"), sep="~") %>%
+        mutate(NUTS = stringr::str_length(ref_area)-2,
+               obs_value = as.numeric(obs_value),
 			   accounting_entry = "B",
-			   activity = "_Z")
+			   activity = "_Z",
+			   sto= "B1GQ",
+			   table="gdp2")
+      
+    }
+    import_file_gdp3 <- function(file) {
+      vroom(file,
+            delim = " ",
+            col_names = c("time_period", "ref_area", "unit_measure", "obs_value"),
+            col_types ="cccc",
+            skip = 4
+      ) %>%
+        mutate(time_period = as.integer(stringr::str_sub(time_period, 1, 4)),
+               country = substr(ref_area, start = 1, stop = 2)) %>%
+        filter(country %in% country_sel) %>%
+        separate(obs_value,c("obs_value","obs_status"), sep="~") %>%
+        mutate(NUTS = stringr::str_length(ref_area)-2,
+               obs_value = as.numeric(obs_value),
+               accounting_entry = "B",
+               activity = "_Z",
+               sto= "B1GQ",
+               table="gdp3")
       
     }
     # import pop
     import_file_pop <- function(file) {
       vroom(file,
             delim = " ",
-            col_names = c("time", "geo", "unit", "values"),
+            col_names = c("time_period", "ref_area", "unit_measure", "obs_value"),
             col_types ="cccc",
             skip = 4
       ) %>%
-        mutate(time = as.integer(stringr::str_sub(time, 1, 4)),
-               country = substr(geo, start = 1, stop = 2)) %>%
+        mutate(time_period = as.integer(stringr::str_sub(time_period, 1, 4)),
+               country = substr(ref_area, start = 1, stop = 2)) %>%
         filter(country %in% country_sel) %>%
-        separate(values,c("values","flag"), sep="~") %>%
-        mutate(NUTS = stringr::str_length(geo)-2,
-               values = as.numeric(values),
+        separate(obs_value,c("obs_value","obs_status"), sep="~") %>%
+        mutate(NUTS = stringr::str_length(ref_area)-2,
+               obs_value = as.numeric(obs_value),
                accounting_entry = "_Z",
-               activity = "_Z")
+               activity = "_Z",
+			         sto="POP",
+			         table="pop3",
+			         unit_measure="PS")
       
     }
     #import gva
     import_file_gva <- function(file) {
       vroom(file,
             delim = " ",
-            col_names = c("time", "geo", "nace_r2", "unit", "values"),
+            col_names = c("time_period", "ref_area", "activity", "unit_measure", "obs_value"),
             col_types = "ccccc",
             skip = 4
       ) %>%
-        mutate(time = as.integer(stringr::str_sub(time, 1, 4)),
-               country = substr(geo, start = 1, stop = 2)) %>%
+        mutate(time_period = as.integer(stringr::str_sub(time_period, 1, 4)),
+               country = substr(ref_area, start = 1, stop = 2)) %>%
         filter(country %in% country_sel) %>%
-        separate(values,c("values","flag"), sep="~") %>%
-        mutate(NUTS = stringr::str_length(geo)-2,
-               values = as.numeric(values),
-			   accounting_entry = "B")
+        separate(obs_value,c("obs_value","obs_status"), sep="~") %>%
+        mutate(NUTS = stringr::str_length(ref_area)-2,
+               obs_value = as.numeric(obs_value),
+			   accounting_entry = "B",
+			   sto="B1G",
+			   table="gva3") %>% 
+        regacc::convert_eurobase_codes()
     }
     #import hw
     import_file_hw <- function(file) {
       vroom(file,
             delim = " ",
-            col_names = c("time", "geo", "nace_r2", "na_item", "unit", "values"),
+            col_names = c("time_period", "ref_area", "activity", "na_item", "unit_measure", "obs_value"),
             col_types = "cccccc",
             skip = 4
       ) %>%
-        mutate(time = as.integer(stringr::str_sub(time, 1, 4)),
-               country = substr(geo, start = 1, stop = 2)) %>%
+        mutate(time_period = as.integer(stringr::str_sub(time_period, 1, 4)),
+               country = substr(ref_area, start = 1, stop = 2)) %>%
         filter(country %in% country_sel) %>%
-        separate(values,c("values","flag"), sep="~") %>%
-        mutate(NUTS = stringr::str_length(geo)-2,
-               values = as.numeric(values),
-               accounting_entry = "_Z")
+        separate(obs_value,c("obs_value","obs_status"), sep="~") %>%
+        mutate(NUTS = stringr::str_length(ref_area)-2,
+               obs_value = as.numeric(obs_value),
+               accounting_entry = "_Z",
+               table="emphw2",
+               unit_measure="HW")%>% 
+        regacc::convert_eurobase_codes()
     }
     
-    import_file_d1p51g <- function(file) {
+    import_file_d1 <- function(file) {
       vroom(file,
             delim = " ",
-            col_names = c("time", "geo", "nace_r2", "unit", "values"),
+            col_names = c("time_period", "ref_area", "activity", "unit_measure", "obs_value"),
             col_types = "ccccc",
             skip = 4
       ) %>%
-        mutate(time = as.integer(stringr::str_sub(time, 1, 4)),
-               country = substr(geo, start = 1, stop = 2)) %>%
+        mutate(time_period = as.integer(stringr::str_sub(time_period, 1, 4)),
+               country = substr(ref_area, start = 1, stop = 2)) %>%
         filter(country %in% country_sel) %>%
-        separate(values,c("values","flag"), sep="~") %>%
-        mutate(NUTS = stringr::str_length(geo)-2,
-               values = as.numeric(values),
-               accounting_entry = "D")
+        separate(obs_value,c("obs_value","obs_status"), sep="~") %>%
+        mutate(NUTS = stringr::str_length(ref_area)-2,
+               obs_value = as.numeric(obs_value),
+               accounting_entry = "D",
+			          sto="D1",
+			          table="coe2")%>% 
+        regacc::convert_eurobase_codes()
+    }
+    import_file_p51g <- function(file) {
+      vroom(file,
+            delim = " ",
+            col_names = c("time_period", "ref_area", "activity", "unit_measure", "obs_value"),
+            col_types = "ccccc",
+            skip = 4
+      ) %>%
+        mutate(time_period = as.integer(stringr::str_sub(time_period, 1, 4)),
+               country = substr(ref_area, start = 1, stop = 2)) %>%
+        filter(country %in% country_sel) %>%
+        separate(obs_value,c("obs_value","obs_status"), sep="~") %>%
+        mutate(NUTS = stringr::str_length(ref_area)-2,
+               obs_value = as.numeric(obs_value),
+               accounting_entry = "D",
+               sto="P51G",
+               table="gfcf2")%>% 
+        regacc::convert_eurobase_codes()
     }
     
     # import file for emp
     import_file_emp <- function(file) {
       vroom(file,
             delim = " ",
-            col_names = c("time", "geo", "nace_r2", "na_item", "unit", "values"),
+            col_names = c("time_period", "ref_area", "activity", "na_item", "unit_measure", "obs_value"),
             col_types = "cccccc",
             skip = 4
       ) %>%
-        mutate(time = as.integer(stringr::str_sub(time, 1, 4)),
-               country = substr(geo, start = 1, stop = 2)) %>%
+        mutate(time_period = as.integer(stringr::str_sub(time_period, 1, 4)),
+               country = substr(ref_area, start = 1, stop = 2)) %>%
         filter(country %in% country_sel) %>%
-        separate(values,c("values","flag"), sep="~") %>%
-        mutate(NUTS = stringr::str_length(geo)-2,
-               values = as.numeric(values),
-			   accounting_entry = "_Z",)
+        separate(obs_value,c("obs_value","obs_status"), sep="~") %>%
+        mutate(NUTS = stringr::str_length(ref_area)-2,
+               obs_value = as.numeric(obs_value),
+			   accounting_entry = "_Z",
+			   table="emp3",
+			   unit_measure="PS")%>% 
+        regacc::convert_eurobase_codes()
     }
     
     # import file for hh
     import_file_hh <- function(file) {
       vroom(file,
             delim = " ",
-            col_names = c("time", "geo", "na_item", "direct", "unit", "values"),
+            col_names = c("time_period", "ref_area", "na_item", "direct", "unit_measure", "obs_value"),
             col_types = "cccccc",
             skip = 4
       ) %>%
-        mutate(time = as.integer(stringr::str_sub(time, 1, 4)),
-               country = substr(geo, start = 1, stop = 2)) %>%
+        mutate(time_period = as.integer(stringr::str_sub(time_period, 1, 4)),
+               country = substr(ref_area, start = 1, stop = 2)) %>%
         filter(country %in% country_sel) %>%
-        separate(values,c("values","flag"), sep="~") %>%
-        mutate(NUTS = stringr::str_length(geo)-2,
-               values = as.numeric(values),
-               activity ="_Z")
+        separate(obs_value,c("obs_value","obs_status"), sep="~") %>%
+        mutate(NUTS = stringr::str_length(ref_area)-2,
+               obs_value = as.numeric(obs_value),
+               activity ="_Z",
+               table="hh2")%>% 
+        regacc::convert_eurobase_codes()
     }
     
     # gvagr
     import_file_gvagr <- function(file) {
       vroom(file,
             delim = " ",
-            col_names = c("time", "geo", "unit", "values"),
+            col_names = c("time_period", "ref_area", "unit_measure", "obs_value"),
             col_types = "cccc",
             skip = 4
       ) %>%
-        mutate(time = as.integer(stringr::str_sub(time, 1, 4)),
-               country = substr(geo, start = 1, stop = 2)) %>%
+        mutate(time_period = as.integer(stringr::str_sub(time_period, 1, 4)),
+               country = substr(ref_area, start = 1, stop = 2)) %>%
         filter(country %in% country_sel) %>%
-        separate(values,c("values","flag"), sep="~") %>%
-        mutate(NUTS = stringr::str_length(geo)-2,
-               values = as.numeric(values),
+        separate(obs_value,c("obs_value","obs_status"), sep="~") %>%
+        mutate(NUTS = stringr::str_length(ref_area)-2,
+               obs_value = as.numeric(obs_value),
 			   accounting_entry = "_Z",
-			   activity = "_T")
+			   activity = "TOTAL",
+			   sto="B1G",
+			   table="gvagr2")
     }
     
     # nlp
     import_file_nlp <- function(file) {
       vroom(file,
             delim = " ",
-            col_names = c("time", "geo", "na_item", "unit", "values"),
+            col_names = c("time_period", "ref_area", "na_item", "unit_measure", "obs_value"),
             col_types = "ccccc",
             skip = 4
       ) %>%
-        mutate(time = as.integer(stringr::str_sub(time, 1, 4)),
-               country = substr(geo, start = 1, stop = 2)) %>%
+        mutate(time_period = as.integer(stringr::str_sub(time_period, 1, 4)),
+               country = substr(ref_area, start = 1, stop = 2)) %>%
         filter(country %in% country_sel) %>%
-        separate(values,c("values","flag"), sep="~") %>%
-        mutate(NUTS = stringr::str_length(geo)-2,
-               values = as.numeric(values))
+        separate(obs_value,c("obs_value","obs_status"), sep="~") %>%
+        mutate(NUTS = stringr::str_length(ref_area)-2,
+               obs_value = as.numeric(obs_value))
     }
     
     # look for files
@@ -194,16 +252,16 @@ load_sent_eurobase<- function(folder,table_sel, country_sel,time_min= "2019-01-0
     ) %>%
       tibble::as_tibble() %>%
       dplyr::mutate(date=file.mtime(value)) %>%
-      dplyr::filter(date>= time_min & date<=time_max)
+      dplyr::filter(date>= time_min & date<=time_max) 
     
     ##sort files
     if(table_sel == "nama_10r_2gdp"){
       df_list<-df_list %>%
-        mutate(data= map(value,import_file_gdp)) %>%
+        mutate(data= map(value,import_file_gdp2)) %>%
         unnest(cols=c(data))
     } else if (table_sel == "nama_10r_3gdp") {
       df_list<-df_list %>%
-        mutate(data= map(value,import_file_gdp)) %>%
+        mutate(data= map(value,import_file_gdp3)) %>%
         unnest(cols=c(data))
     } else if (table_sel == "nama_10r_3popgdp") {
       df_list<-df_list %>%
@@ -219,11 +277,11 @@ load_sent_eurobase<- function(folder,table_sel, country_sel,time_min= "2019-01-0
         unnest(cols=c(data))
     } else if (table_sel == "nama_10r_2coe") {
       df_list<-df_list %>%
-        mutate(data= map(value,import_file_d1p51g)) %>%
+        mutate(data= map(value,import_file_d1)) %>%
         unnest(cols=c(data))
     } else if (table_sel == "nama_10r_2gfcf") {
       df_list<-df_list %>%
-        mutate(data= map(value,import_file_d1p51g)) %>%
+        mutate(data= map(value,import_file_p51g)) %>%
         unnest(cols=c(data))
     } else if (table_sel == "nama_10r_2emhrw") {
       df_list<-df_list %>%

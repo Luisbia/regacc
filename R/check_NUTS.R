@@ -108,7 +108,7 @@ if ("T1200" %in% unique(data$table_identifier)){
     NUTS1 <- left_join(temp, df) %>%
       select(country,table_identifier,NUTS,time_period, sto, accounting_entry, activity, unit_measure, ref_area, sum, obs_value) %>%
       mutate(diff = round(sum - obs_value, digits = 0),
-             diffp = round (diff * 100/ obs_value, digits = 1))
+             diffp = round (diff * 100/ obs_value, digits = 2))
 
     ## NUTS 1----
     temp<-df %>%
@@ -125,7 +125,7 @@ if ("T1200" %in% unique(data$table_identifier)){
     NUTS2 <- left_join(temp, df) %>%
       select(country,table_identifier,NUTS,time_period, sto, accounting_entry, activity, unit_measure, ref_area, sum, obs_value) %>%
       mutate(diff = round(sum - obs_value, digits = 0),
-             diffp = round (diff * 100/ obs_value, digits = 1))
+             diffp = round (diff * 100/ obs_value, digits = 2))
 
 
     NUTS <- bind_rows(NUTS1, NUTS2) %>%

@@ -24,7 +24,7 @@ load_sent_eurobase(
 
 \item{time_max}{date of publication from where to stop looking (yyyy-mm-dd)}
 
-\item{consolidate}{TRUE to remove duplicated values, FALSE (default) to keep them all}
+\item{consolidate}{TRUE to remove duplicated obs_value, FALSE (default) to keep them all}
 }
 \value{
 a data frame
