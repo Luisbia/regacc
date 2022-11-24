@@ -48,7 +48,7 @@ get_denodo<- function(extraction){
     df_regacc<- dbGetQuery(vdp_con, sql_regacc)}
     
     df_regacc <- df_regacc %>% 
-      select(name,date,value) %>% 
+      select(name,date,value,flag) %>% 
       na.omit() %>% 
       cSplit("name", sep = ".") %>% 
       rename("type"=name_01,
@@ -67,8 +67,9 @@ get_denodo<- function(extraction){
              "unit_measure"=name_14
       ) %>% 
       rename(time_period=date,
-             obs_value=value)%>% 
-      filter(!is.na(obs_value)) %>% 
+             obs_value=value,
+             obs_status=flag)%>% 
+      filter(!is.na(obs_value)) %>%
       mutate(time_period=as.integer(time_period),
              obs_value=as.numeric(obs_value),
              NUTS=as.factor(str_length(ref_area)-2),
