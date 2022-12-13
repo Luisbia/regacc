@@ -107,18 +107,18 @@ calculate_gva_pyp<- function(country_sel,nat_dat,reg_dat,output_dir){
     mutate(obs_value=paste0(obs_value,"#E0")) %>% 
     pivot_wider(names_from=time_period,
                 values_from=obs_value) %>% 
-    arrange(series)
+    arrange(series) %>% 
+    rename(ANNUAL=series)
   
   final_t1200<- final_t1001 %>% 
     mutate(series=str_replace(series,"T1001","T1200"))
   
-  final<- bind_rows(final_t1001,final_t1200) %>% 
-    rename(ANNUAL=series)
+
   
+  data.table::fwrite(final_t1001,paste0(output_dir,"/", country_sel,"_T1001_B1G_PYP.csv"),sep=";")
+  data.table::fwrite(final_t1200,paste0(output_dir,"/", country_sel,"_T1200_B1G_PYP.csv"),sep=";")
   
-  data.table::fwrite(final,paste0(output_dir,"/", country_sel,"_T1001_T1200_B1G_PYP.csv"),sep=";")
-  
-  cli::cli_alert_success(paste0("File created at: ",output_dir))
+  cli::cli_alert_success(paste0("Files created at: ",output_dir))
 }
 
 
