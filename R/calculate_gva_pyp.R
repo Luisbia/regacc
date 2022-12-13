@@ -111,7 +111,7 @@ calculate_gva_pyp<- function(country_sel,nat_dat,reg_dat,output_dir){
     rename(ANNUAL=series)
   
   final_t1200<- final_t1001 %>% 
-    mutate(ANNUALstr_replace(ANNUAL,"T1001","T1200"))
+    mutate(ANNUAL=str_replace(ANNUAL,"T1001","T1200"))
   
 
   
