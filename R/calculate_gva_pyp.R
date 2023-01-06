@@ -113,8 +113,13 @@ calculate_gva_pyp<- function(country_sel,nat_dat,reg_dat,output_dir){
   final_t1200<- final_t1001 %>% 
     mutate(ANNUAL=str_replace(ANNUAL,"T1001","T1200"))
   
+<<<<<<< HEAD
   
   
+=======
+
+  
+>>>>>>> 94898a11f0e9bed04eaee708d27f3fadc437ec7d
   data.table::fwrite(final_t1001,paste0(output_dir,"/", country_sel,"_T1001_B1G_PYP.csv"),sep=";")
   data.table::fwrite(final_t1200,paste0(output_dir,"/", country_sel,"_T1200_B1G_PYP.csv"),sep=";")
   
