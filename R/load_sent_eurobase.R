@@ -212,8 +212,8 @@ load_sent_eurobase<- function(folder,table_sel, country_sel,time_min= "2019-01-0
     import_file_gvagr <- function(file) {
       vroom(file,
             delim = " ",
-            col_names = c("time_period", "ref_area", "unit_measure", "obs_value"),
-            col_types = "cccc",
+            col_names = c("time_period", "ref_area", "unit_measure", "sto","obs_value"),
+            col_types = "ccccc",
             skip = 4
       ) %>%
         mutate(time_period = as.integer(stringr::str_sub(time_period, 1, 4)),
@@ -223,9 +223,9 @@ load_sent_eurobase<- function(folder,table_sel, country_sel,time_min= "2019-01-0
         mutate(NUTS = stringr::str_length(ref_area)-2,
                obs_value = as.numeric(obs_value),
 			   accounting_entry = "_Z",
-			   activity = "TOTAL",
-			   sto="B1G",
-			   table="gvagr2")
+			   table="gvagr2") %>% 
+        mutate(activity=case_when(sto=="B1G" ~ "TOTAL",
+                                  sto=="B1GQ" ~"_Z"))
     }
     
     # nlp
